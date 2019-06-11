@@ -1,4 +1,4 @@
-package com.tumblrdecode.api;
+package com.decode.tumblr.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
