@@ -11,8 +11,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static String API_KEY = "si0PHNqV4V39DZyIxV82QFnxovHxcjXsVpzV9mTHlFHQjNivH1";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

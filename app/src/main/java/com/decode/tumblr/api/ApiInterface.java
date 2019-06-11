@@ -1,10 +1,9 @@
-package com.tumblrdecode.api;
+package com.decode.tumblr.api;
 
 import com.tumblrdecode.model.Data;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-
 
 public interface ApiInterface {
 

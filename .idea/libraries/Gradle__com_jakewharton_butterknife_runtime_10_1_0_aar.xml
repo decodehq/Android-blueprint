@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.jakewharton:butterknife-runtime:10.1.0@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/84498011936b05f8d14bf4994e51735b/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/84498011936b05f8d14bf4994e51735b/res" />
+      <root url="jar://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/transforms-2/files-2.1/02f12f597fd9f1e1044e7f213b0b34fd/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/transforms-2/files-2.1/02f12f597fd9f1e1044e7f213b0b34fd/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-runtime/10.1.0/a34b69a5a5fcf9a9db093ac3b7c96383631e66c/butterknife-runtime-10.1.0-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife-runtime/10.1.0/a34b69a5a5fcf9a9db093ac3b7c96383631e66c/butterknife-runtime-10.1.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
