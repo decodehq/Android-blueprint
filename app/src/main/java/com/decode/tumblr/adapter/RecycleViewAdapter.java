@@ -1,21 +1,18 @@
 package com.decode.tumblr.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.decode.tumblr.R;
-import com.decode.tumblr.activity.DetailsActivity;
 import com.decode.tumblr.helpers.DateFunction;
+import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Post;
 
 import java.util.List;
@@ -26,7 +23,7 @@ import butterknife.ButterKnife;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
 
     private List<Post> postList;
-    private Context context;
+    private OnPostClickListener onPostClickListener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.txt_title)
@@ -45,13 +42,16 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
     }
 
 
+    public void setOnPostClickListener(OnPostClickListener onPostClickListener) {
+        this.onPostClickListener = onPostClickListener;
+    }
+
     public void setPostList(List<Post> postList) {
         this.postList = postList;
         notifyDataSetChanged();
     }
 
     public RecycleViewAdapter(Context context, List<Post> postList) {
-        this.context = context;
         this.postList = postList;
     }
 
@@ -69,30 +69,20 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         holder.txtUpdated.setText(DateFunction.getDateCurrentTimeZone(post.timestamp));
         holder.txtTags.setText("");
 
-        for (int i = 0; i < postList.get(position).tags.size(); i++) {
-            holder.txtTags.setText(holder.txtTags.getText() + " #" + postList.get(position).tags.get(i));
+        for (int i = 0; i < post.tags.size(); i++) {
+            holder.txtTags.setText(holder.txtTags.getText() + " #" + post.tags.get(i));
         }
 
         try {
-            Glide.with(context).load(postList.get(position).photos.get(0).altSizes.get(2).url).into(holder.imgPost);
+            Glide.with(holder.itemView).load(post.photos.get(0).altSizes.get(2).url).into(holder.imgPost);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
         holder.itemView.setOnClickListener(v -> {
-
-            // Open Details Activity on click
-            Intent intent = new Intent(context, DetailsActivity.class);
-            intent.putExtra("Post", post);
-            try {
-                intent.putExtra("imgLink", postList.get(position).photos.get(0).altSizes.get(2).url);
-            } catch (Exception e) {
-                intent.putExtra("imgLink", R.drawable.no_image_available);
-            }
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.imgPost, "simple_activity_transition");
-            context.startActivity(intent, options.toBundle());
+            onPostClickListener.onPostClick(post);
 
         });
     }

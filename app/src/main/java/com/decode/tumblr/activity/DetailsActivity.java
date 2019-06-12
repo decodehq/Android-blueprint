@@ -21,6 +21,8 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.decode.tumblr.activity.MainActivity.POST_INTENT;
+
 public class DetailsActivity extends AppCompatActivity {
 
     private static final String TAG = DetailsActivity.class.getSimpleName();
@@ -43,7 +45,7 @@ public class DetailsActivity extends AppCompatActivity {
         setupToolbar();
 
         // Get paracelable data
-        Post post = getIntent().getParcelableExtra("Post");
+        Post post = getIntent().getParcelableExtra(POST_INTENT);
         if (post != null) {
 
             try {

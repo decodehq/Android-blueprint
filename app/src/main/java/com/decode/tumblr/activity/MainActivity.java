@@ -1,5 +1,6 @@
 package com.decode.tumblr.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.decode.tumblr.adapter.RecycleViewAdapter;
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
 import com.decode.tumblr.helpers.DateFunction;
+import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.Post;
 import com.google.android.material.appbar.AppBarLayout;
@@ -38,7 +40,9 @@ import retrofit2.Response;
 
 import static com.decode.tumblr.App.API_KEY;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnPostClickListener {
+
+    public static final String POST_INTENT = "PostObject";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         adapter = new RecycleViewAdapter(this, postList);
         recyclerView.setAdapter(adapter);
+        adapter.setOnPostClickListener(this);
 
         // Get data
         loadPosts();
@@ -141,5 +146,20 @@ public class MainActivity extends AppCompatActivity {
             return data.response.posts;
         }
         return null;
+    }
+
+    @Override
+    public void onPostClick(Post post) {
+
+        // Open Details Activity on click
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(POST_INTENT, post);
+        try {
+            intent.putExtra("imgLink", post.photos.get(0).altSizes.get(2).url);
+        } catch (Exception e) {
+            intent.putExtra("imgLink", R.drawable.no_image_available);
+        }
+
+        startActivity(intent);
     }
 }
