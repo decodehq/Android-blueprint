@@ -1,5 +1,4 @@
-package com.tumblrdecode.model;
-
+package com.decode.tumblr.model;
 import com.google.gson.annotations.SerializedName;
 
 public class AltSize {

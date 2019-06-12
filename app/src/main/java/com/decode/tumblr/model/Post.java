@@ -1,8 +1,9 @@
-package com.tumblrdecode.model;
+package com.decode.tumblr.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.decode.tumblr.model.Reblog;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
