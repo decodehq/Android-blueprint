@@ -5,6 +5,5 @@
     <string name="action_settings">Settings</string>
     <string name="blog_title">Blog Title:</string>
     <string name="total_posts">Total Posts:</string>
-    <string name="press_back_to_exit">Press BACK again to exit</string>
     <string name="android_onboarding_project">Android Onboarding project</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.decode.tumblr.R;
+import com.decode.tumblr.activity.DetailsActivity;
 import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.model.Post;
 
@@ -72,7 +73,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.txtTags.setText(holder.txtTags.getText() + " #" + postList.get(position).tags.get(i));
         }
 
-
         try {
             Glide.with(context).load(postList.get(position).photos.get(0).altSizes.get(2).url).into(holder.imgPost);
         } catch (Exception e) {
@@ -82,16 +82,17 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         holder.itemView.setOnClickListener(v -> {
 
-//            Intent intent = new Intent(context, DetailsActivity.class);
-//            intent.putExtra("Post", post);
-//            try {
-//                intent.putExtra("imgLink", postList.get(position).photos.get(0).altSizes.get(2).url);
-//            } catch (Exception e) {
-//                intent.putExtra("imgLink", R.drawable.no_image_available);
-//            }
-//
-//            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.imgPost, "simple_activity_transition");
-//            context.startActivity(intent, options.toBundle());
+            // Open Details Activity on click
+            Intent intent = new Intent(context, DetailsActivity.class);
+            intent.putExtra("Post", post);
+            try {
+                intent.putExtra("imgLink", postList.get(position).photos.get(0).altSizes.get(2).url);
+            } catch (Exception e) {
+                intent.putExtra("imgLink", R.drawable.no_image_available);
+            }
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, holder.imgPost, "simple_activity_transition");
+            context.startActivity(intent, options.toBundle());
 
         });
     }
