@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.decode.tumblr.R;
+import com.decode.tumblr.adapter.RecycleViewAdapter;
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
 import com.decode.tumblr.helpers.DateFunction;
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Post> postList = new ArrayList<>();
     private int pageIndex = 0;
     private int pageLimit = 20;
-    private int totalPosts;
+    private int totalPosts = 0;
+    private RecycleViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         // Set title
-       toolbar.setTitle(getString(R.string.android_onboarding_project));
+        toolbar.setTitle(getString(R.string.android_onboarding_project));
 
-       // Setup recyclerView
+        // Setup recyclerView
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                     totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
 
                     // Set result to adapter
-                    //adapter.setPostList(postList);
+                    adapter.setPostList(postList);
                 }
 
                 swipeRefreshLayout.setRefreshing(false);
