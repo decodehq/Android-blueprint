@@ -1,13 +1,10 @@
 package com.decode.tumblr.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
-import com.decode.tumblr.R;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.decode.tumblr.R;
 
 public class MainActivity extends AppCompatActivity {
 
