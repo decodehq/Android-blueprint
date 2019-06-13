@@ -119,7 +119,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
                 progressBar.setVisibility(View.GONE);
 
                 //Toast error on screen
-                Toast.makeText(getContext(), "Error getting data\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.error_getting_data) + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e("Error", Objects.requireNonNull(t.getMessage()));
             }
         });
@@ -137,7 +137,6 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     public void onPostClick(Post post, View view) {
 
         FragmentMainDirections.ActionFragmentMainToFragmentDetails action = FragmentMainDirections.actionFragmentMainToFragmentDetails(post);
-        action.setPostObject(post);
         Navigation.findNavController(view).navigate(action);
 
     }

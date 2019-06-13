@@ -1,25 +1,35 @@
 package com.decode.tumblr.adapter;
 
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.decode.tumblr.R;
+import com.decode.tumblr.fragment.FragmentDetails;
 import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Post;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
+    private static final String TAG = RecycleViewAdapter.class.getSimpleName();
 
     private List<Post> postList;
     private OnPostClickListener onPostClickListener;
@@ -72,12 +82,23 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
             holder.txtTags.setText(holder.txtTags.getText() + " #" + post.tags.get(i));
         }
 
-        try {
-            Glide.with(holder.itemView).load(post.photos.get(0).altSizes.get(2).url).into(holder.imgPost);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Glide.with(holder.itemView)
+                .load(post.photos.get(0).altSizes.get(2).url)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.e(TAG, "Error loading image", e);
+                        Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
+                .into(holder.imgPost);
 
 
         holder.itemView.setOnClickListener(v -> {
