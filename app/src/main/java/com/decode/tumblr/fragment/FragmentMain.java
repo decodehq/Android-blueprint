@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -138,7 +140,8 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     }
 
     @Override
-    public void onPostClick(Post post) {
+    public void onPostClick(Post post, View view) {
+        Navigation.findNavController(view).navigate(R.id.action_fragmentMain_to_fragmentDetails);
 
     }
 }

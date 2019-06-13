@@ -82,7 +82,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
 
         holder.itemView.setOnClickListener(v -> {
-            onPostClickListener.onPostClick(post);
+            onPostClickListener.onPostClick(post, holder.itemView);
 
         });
     }

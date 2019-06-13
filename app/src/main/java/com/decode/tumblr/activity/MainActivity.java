@@ -1,6 +1,7 @@
 package com.decode.tumblr.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
 
 
     @Override
-    public void onPostClick(Post post) {
+    public void onPostClick(Post post, View view) {
 
         // Open Details Activity on click
 //        Intent intent = new Intent(this, DetailsActivity.class);
