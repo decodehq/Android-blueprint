@@ -1,16 +1,15 @@
 package com.decode.tumblr.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,23 +18,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.decode.tumblr.R;
 import com.decode.tumblr.adapter.RecycleViewAdapter;
-import com.decode.tumblr.api.ApiClient;
-import com.decode.tumblr.api.ApiInterface;
 import com.decode.tumblr.interfaces.OnPostClickListener;
-import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.Post;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.decode.tumblr.viewmodel.FragmentMainViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static com.decode.tumblr.App.API_KEY;
 
 public class FragmentMain extends Fragment implements OnPostClickListener {
 
@@ -45,12 +33,8 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
-    private List<Post> postList = new ArrayList<>();
-    private int pageIndex = 0;
-    private int pageLimit = 20;
-    private int totalPosts = 0;
     private RecycleViewAdapter adapter;
-
+    private FragmentMainViewModel mFragmentMainViewModel;
 
     @Nullable
     @Override
@@ -68,69 +52,31 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new RecycleViewAdapter(postList);
-        recyclerView.setAdapter(adapter);
-        adapter.setOnPostClickListener(this);
+
 
         // Get data
-        loadPosts();
+        mFragmentMainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
+        mFragmentMainViewModel.fetchPosts();
+
+        subscribePostData();
 
         // On swipe - get new data from server
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            postList.clear();
-            loadPosts();
+            mFragmentMainViewModel.fetchPosts();
         });
 
     }
 
-    private void loadPosts() {
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Data> call = apiService.getPosts(API_KEY, pageIndex, pageLimit);
-        call.enqueue(new Callback<Data>() {
-            @Override
-            public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response) {
-                List<Post> results = fetchResults(response);
+    private void subscribePostData() {
+        mFragmentMainViewModel.getPostLiveData().observe(this, posts -> {
+            adapter = new RecycleViewAdapter(posts);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnPostClickListener(FragmentMain.this);
 
-                if (results != null) {
-                    postList.clear();   // Remove this line if you want to make infinite scroll
-                    postList.addAll(results);
-                    totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
-
-                    // Set result to adapter
-                    adapter.setPostList(postList);
-                }
-
-                swipeRefreshLayout.setRefreshing(false);
-
-                // Set header data
-                //txtBlogTitle.setText(Objects.requireNonNull(response.body()).response.blog.title);
-                //txtTotalPosts.setText(String.valueOf(response.body().response.blog.total_posts));
-                //txtUpdated.setText(DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
-
-                progressBar.setVisibility(View.GONE);
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
-                // handle error
-                swipeRefreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
-
-                //Toast error on screen
-                Toast.makeText(getContext(), getString(R.string.error_getting_data) + t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.e("Error", Objects.requireNonNull(t.getMessage()));
-            }
+            progressBar.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
         });
-    }
-
-    private List<Post> fetchResults(Response<Data> response) {
-        if (response.body() != null) {
-            Data data = response.body();
-            return data.response.posts;
-        }
-        return null;
     }
 
     @Override
