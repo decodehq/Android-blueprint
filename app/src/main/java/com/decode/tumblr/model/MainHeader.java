@@ -16,23 +16,11 @@ public class MainHeader {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getTotalPost() {
         return totalPost;
     }
 
-    public void setTotalPost(String totalPost) {
-        this.totalPost = totalPost;
-    }
-
     public String getUpdated() {
         return updated;
-    }
-
-    public void setUpdated(String updated) {
-        this.updated = updated;
     }
 }
