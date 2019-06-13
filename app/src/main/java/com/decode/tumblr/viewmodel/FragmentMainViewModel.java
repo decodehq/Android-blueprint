@@ -10,9 +10,9 @@ import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
 import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.model.Data;
+import com.decode.tumblr.model.MainHeader;
 import com.decode.tumblr.model.Post;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,9 +28,7 @@ public class FragmentMainViewModel extends ViewModel {
     private int pageIndex = 0;
     private int pageLimit = 20;
     private int totalPosts = 0;
-    private MutableLiveData<String> blogTitle = new MutableLiveData<>();
-    private MutableLiveData<String> blogTotalPost = new MutableLiveData<>();
-    private MutableLiveData<String> blogUpdated = new MutableLiveData<>();
+    private MutableLiveData<MainHeader> mainHeaderMutableLiveData = new MutableLiveData<>();
 
     public MutableLiveData<List<Post>> getPostLiveData() {
         if (postLiveData == null) {
@@ -40,16 +38,9 @@ public class FragmentMainViewModel extends ViewModel {
         return postLiveData;
     }
 
-    public MutableLiveData<String> getBlogTitle() {
-        return blogTitle;
-    }
 
-    public MutableLiveData<String> getBlogTotalPost() {
-        return blogTotalPost;
-    }
-
-    public MutableLiveData<String> getBlogUpdated() {
-        return blogUpdated;
+    public MutableLiveData<MainHeader> getMainHeaderMutableLiveData() {
+        return mainHeaderMutableLiveData;
     }
 
     public void fetchPosts() {
@@ -64,9 +55,12 @@ public class FragmentMainViewModel extends ViewModel {
                     totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
                     postLiveData.setValue(results);
 
-                    blogTitle.postValue(response.body().response.blog.title);
-                    blogTotalPost.postValue(String.valueOf(response.body().response.blog.total_posts));
-                    blogUpdated.postValue(DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
+                    MainHeader header = new MainHeader(response.body().response.blog.title,
+                            String.valueOf(response.body().response.blog.total_posts),
+                            DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
+
+                    mainHeaderMutableLiveData.postValue(header);
+
                 }
             }
 

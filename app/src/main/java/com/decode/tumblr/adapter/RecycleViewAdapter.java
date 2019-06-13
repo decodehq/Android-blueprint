@@ -17,13 +17,11 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.decode.tumblr.R;
-import com.decode.tumblr.fragment.FragmentDetails;
 import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Post;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,22 +81,33 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
 
 
-        Glide.with(holder.itemView)
-                .load(post.photos.get(0).altSizes.get(2).url)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e(TAG, "Error loading image", e);
-                        Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
-                        return false;
-                    }
+        try {
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(holder.imgPost);
+            if (post.photos == null) {
+                Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
+
+            } else {
+
+                Glide.with(holder.itemView)
+                        .load(post.photos.get(0).altSizes.get(2).url)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                Log.e(TAG, "Error loading image", e);
+                                Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
+                        .into(holder.imgPost);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         holder.itemView.setOnClickListener(v -> {

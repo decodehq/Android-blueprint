@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.decode.tumblr.R;
+import com.decode.tumblr.model.MainHeader;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -47,10 +48,11 @@ public class MainActivity extends AppCompatActivity {
         FragmentMainViewModel mainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
         mainViewModel.fetchPosts();
 
-        mainViewModel.getBlogTitle().observe(this, s -> txtBlogTitle.setText(s));
-
-        mainViewModel.getBlogTotalPost().observe(this, s -> txtTotalPosts.setText(s));
-
-        mainViewModel.getBlogUpdated().observe(this, s -> txtUpdated.setText(s));
+        // Set header data
+        mainViewModel.getMainHeaderMutableLiveData().observe(this, mainHeader -> {
+            txtBlogTitle.setText(mainHeader.getTitle());
+            txtTotalPosts.setText(mainHeader.getTotalPost());
+            txtUpdated.setText(mainHeader.getUpdated());
+        });
     }
 }

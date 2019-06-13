@@ -96,22 +96,33 @@ public class FragmentDetails extends Fragment {
 
         txtParacelableData.setText(Html.fromHtml(data));
 
-        Glide.with(Objects.requireNonNull(getContext()))
-                .load(args.getPostObject().photos.get(0).altSizes.get(2).url)
-                .listener(new RequestListener<Drawable>() {
-                    @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e(TAG, "Error loading image", e);
-                        Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
-                        return false;
-                    }
+        try {
 
-                    @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        return false;
-                    }
-                })
-                .into(imgPostLarge);
+            if (args.getPostObject().photos == null) {
+                Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
 
+            } else {
+
+                Glide.with(Objects.requireNonNull(getContext()))
+                        .load(args.getPostObject().photos.get(0).altSizes.get(2).url)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                Log.e(TAG, "Error loading image", e);
+                                Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                return false;
+                            }
+                        })
+                        .into(imgPostLarge);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
