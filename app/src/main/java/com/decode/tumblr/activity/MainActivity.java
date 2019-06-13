@@ -6,8 +6,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.decode.tumblr.R;
+import com.decode.tumblr.viewmodel.FragmentMainViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -41,5 +44,13 @@ public class MainActivity extends AppCompatActivity {
         // Set title
         toolbar.setTitle(getString(R.string.android_onboarding_project));
 
+        FragmentMainViewModel mainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
+        mainViewModel.fetchPosts();
+
+        mainViewModel.getBlogTitle().observe(this, s -> txtBlogTitle.setText(s));
+
+        mainViewModel.getBlogTotalPost().observe(this, s -> txtTotalPosts.setText(s));
+
+        mainViewModel.getBlogUpdated().observe(this, s -> txtUpdated.setText(s));
     }
 }

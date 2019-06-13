@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
+import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.Post;
 
@@ -23,11 +24,13 @@ import static com.decode.tumblr.App.API_KEY;
 
 public class FragmentMainViewModel extends ViewModel {
 
-    private List<Post> postList = new ArrayList<>();
     private MutableLiveData<List<Post>> postLiveData = new MutableLiveData<>();
     private int pageIndex = 0;
     private int pageLimit = 20;
     private int totalPosts = 0;
+    private MutableLiveData<String> blogTitle = new MutableLiveData<>();
+    private MutableLiveData<String> blogTotalPost = new MutableLiveData<>();
+    private MutableLiveData<String> blogUpdated = new MutableLiveData<>();
 
     public MutableLiveData<List<Post>> getPostLiveData() {
         if (postLiveData == null) {
@@ -37,7 +40,19 @@ public class FragmentMainViewModel extends ViewModel {
         return postLiveData;
     }
 
-    public List<Post> fetchPosts() {
+    public MutableLiveData<String> getBlogTitle() {
+        return blogTitle;
+    }
+
+    public MutableLiveData<String> getBlogTotalPost() {
+        return blogTotalPost;
+    }
+
+    public MutableLiveData<String> getBlogUpdated() {
+        return blogUpdated;
+    }
+
+    public void fetchPosts() {
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Data> call = apiService.getPosts(API_KEY, pageIndex, pageLimit);
         call.enqueue(new Callback<Data>() {
@@ -46,10 +61,12 @@ public class FragmentMainViewModel extends ViewModel {
                 List<Post> results = fetchResults(response);
 
                 if (results != null) {
-                    postList.clear();
-                    postList.addAll(results);
                     totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
-                    postLiveData.setValue(postList);
+                    postLiveData.setValue(results);
+
+                    blogTitle.postValue(response.body().response.blog.title);
+                    blogTotalPost.postValue(String.valueOf(response.body().response.blog.total_posts));
+                    blogUpdated.postValue(DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
                 }
             }
 
@@ -59,8 +76,6 @@ public class FragmentMainViewModel extends ViewModel {
                 Log.e("Error", Objects.requireNonNull(t.getMessage()));
             }
         });
-
-        return postList;
     }
 
     private List<Post> fetchResults(Response<Data> response) {

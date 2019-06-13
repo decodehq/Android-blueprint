@@ -55,8 +55,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
 
 
         // Get data
-        mFragmentMainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
-        mFragmentMainViewModel.fetchPosts();
+        mFragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
 
         subscribePostData();
 
