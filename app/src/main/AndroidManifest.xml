@@ -14,11 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity
-            android:name=".activity.DetailsActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
