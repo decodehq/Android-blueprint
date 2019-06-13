@@ -15,9 +15,18 @@
             app:launchSingleTop="false"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="PostObject"
+            app:argType="com.decode.tumblr.model.Post" />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentDetails"
         android:name="com.decode.tumblr.fragment.FragmentDetails"
-        android:label="FragmentDetails" />
+        android:label="FragmentDetails" >
+        <argument
+            android:name="PostObject"
+            app:argType="com.decode.tumblr.model.Post" />
+    </fragment>
+
 </navigation>

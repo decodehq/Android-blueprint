@@ -6,4 +6,5 @@
     <string name="blog_title">Blog Title:</string>
     <string name="total_posts">Total Posts:</string>
     <string name="android_onboarding_project">Android Onboarding project</string>
+    <string name="no_data">No data to display!</string>
 </resources>

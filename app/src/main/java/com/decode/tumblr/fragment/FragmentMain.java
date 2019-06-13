@@ -12,18 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.decode.tumblr.R;
-import com.decode.tumblr.activity.MainActivity;
 import com.decode.tumblr.adapter.RecycleViewAdapter;
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
-import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.Post;
@@ -55,16 +52,12 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     private RecycleViewAdapter adapter;
 
 
-    public FragmentMain() {
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_fragment_main, container, false);
         ButterKnife.bind(this, view);
         return view;
-
     }
 
 
@@ -75,7 +68,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        adapter = new RecycleViewAdapter(getContext(), postList);
+        adapter = new RecycleViewAdapter(postList);
         recyclerView.setAdapter(adapter);
         adapter.setOnPostClickListener(this);
 
@@ -100,6 +93,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
                 List<Post> results = fetchResults(response);
 
                 if (results != null) {
+                    postList.clear();   // Remove this line if you want to make infinite scroll
                     postList.addAll(results);
                     totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
 
@@ -141,7 +135,10 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
 
     @Override
     public void onPostClick(Post post, View view) {
-        Navigation.findNavController(view).navigate(R.id.action_fragmentMain_to_fragmentDetails);
+
+        FragmentMainDirections.ActionFragmentMainToFragmentDetails action = FragmentMainDirections.actionFragmentMainToFragmentDetails(post);
+        action.setPostObject(post);
+        Navigation.findNavController(view).navigate(action);
 
     }
 }

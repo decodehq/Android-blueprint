@@ -1,6 +1,5 @@
 package com.decode.tumblr.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         notifyDataSetChanged();
     }
 
-    public RecycleViewAdapter(Context context, List<Post> postList) {
+    public RecycleViewAdapter(List<Post> postList) {
         this.postList = postList;
     }
 
