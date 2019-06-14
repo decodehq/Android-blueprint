@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
 import com.decode.tumblr.helpers.DateFunction;
+import com.decode.tumblr.helpers.SingleLiveEvent;
 import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.MainHeader;
 import com.decode.tumblr.model.Post;
@@ -29,22 +30,30 @@ public class FragmentMainViewModel extends ViewModel {
     private int pageLimit = 20;
     private int totalPosts = 0;
     private MutableLiveData<MainHeader> mainHeaderMutableLiveData = new MutableLiveData<>();
+    private ApiInterface apiService;
+    private SingleLiveEvent<String> singleLiveErrorEvent = new SingleLiveEvent<>();
+
 
     public MutableLiveData<List<Post>> getPostLiveData() {
-        if (postLiveData == null) {
-            postLiveData = new MutableLiveData<>();
-            fetchPosts();
-        }
+        fetchPosts();
         return postLiveData;
     }
 
+
+    public FragmentMainViewModel() {
+        apiService = ApiClient.getClient().create(ApiInterface.class);
+    }
+
+    public SingleLiveEvent<String> getSingleLiveErrorEvent() {
+        return singleLiveErrorEvent;
+    }
 
     public MutableLiveData<MainHeader> getMainHeaderMutableLiveData() {
         return mainHeaderMutableLiveData;
     }
 
     public void fetchPosts() {
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Data> call = apiService.getPosts(API_KEY, pageIndex, pageLimit);
         call.enqueue(new Callback<Data>() {
             @Override
@@ -59,7 +68,7 @@ public class FragmentMainViewModel extends ViewModel {
                             String.valueOf(response.body().response.blog.total_posts),
                             DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
 
-                    mainHeaderMutableLiveData.postValue(header);
+                    mainHeaderMutableLiveData.setValue(header);
 
                 }
             }
@@ -68,6 +77,7 @@ public class FragmentMainViewModel extends ViewModel {
             public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
                 // handle error
                 Log.e("Error", Objects.requireNonNull(t.getMessage()));
+                singleLiveErrorEvent.setValue(t.getMessage());
             }
         });
     }

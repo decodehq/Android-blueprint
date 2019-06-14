@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(getString(R.string.android_onboarding_project));
 
         FragmentMainViewModel mainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
+
         mainViewModel.fetchPosts();
 
         // Set header data

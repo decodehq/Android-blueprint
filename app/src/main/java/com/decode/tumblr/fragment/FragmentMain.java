@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
     private RecycleViewAdapter adapter;
-    private FragmentMainViewModel mFragmentMainViewModel;
+    private FragmentMainViewModel fragmentMainViewModel;
 
     @Nullable
     @Override
@@ -55,20 +56,20 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
 
 
         // Get data
-        mFragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
+        fragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
 
         subscribePostData();
 
         // On swipe - get new data from server
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            mFragmentMainViewModel.fetchPosts();
+            fragmentMainViewModel.fetchPosts();
         });
 
     }
 
     private void subscribePostData() {
-        mFragmentMainViewModel.getPostLiveData().observe(this, posts -> {
+        fragmentMainViewModel.getPostLiveData().observe(this, posts -> {
             adapter = new RecycleViewAdapter(posts);
             recyclerView.setAdapter(adapter);
             adapter.setOnPostClickListener(FragmentMain.this);
@@ -76,6 +77,9 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         });
+
+        // Subscribe -> Single live error event
+        fragmentMainViewModel.getSingleLiveErrorEvent().observe(this, s -> Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show());
     }
 
     @Override
