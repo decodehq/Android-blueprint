@@ -1,47 +1,30 @@
 package com.decode.tumblr.viewmodel;
 
-import android.util.Log;
+import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.decode.tumblr.api.ApiClient;
 import com.decode.tumblr.api.ApiInterface;
-import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.helpers.SingleLiveEvent;
-import com.decode.tumblr.model.Data;
 import com.decode.tumblr.model.MainHeader;
 import com.decode.tumblr.model.Post;
+import com.decode.tumblr.repository.PostRepository;
 
 import java.util.List;
-import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+public class FragmentMainViewModel extends AndroidViewModel {
 
-import static com.decode.tumblr.App.API_KEY;
-
-public class FragmentMainViewModel extends ViewModel {
-
-    private MutableLiveData<List<Post>> postLiveData = new MutableLiveData<>();
-    private int pageIndex = 0;
-    private int pageLimit = 20;
-    private int totalPosts = 0;
     private MutableLiveData<MainHeader> mainHeaderMutableLiveData = new MutableLiveData<>();
-    private ApiInterface apiService;
     private SingleLiveEvent<String> singleLiveErrorEvent = new SingleLiveEvent<>();
+    private PostRepository postRepository;
 
-
-    public MutableLiveData<List<Post>> getPostLiveData() {
+    public FragmentMainViewModel(@NonNull Application context) {
+        super(context);
+        postRepository = new PostRepository(context);
         fetchPosts();
-        return postLiveData;
-    }
-
-
-    public FragmentMainViewModel() {
-        apiService = ApiClient.getClient().create(ApiInterface.class);
     }
 
     public SingleLiveEvent<String> getSingleLiveErrorEvent() {
@@ -53,40 +36,6 @@ public class FragmentMainViewModel extends ViewModel {
     }
 
     public void fetchPosts() {
-        apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Data> call = apiService.getPosts(API_KEY, pageIndex, pageLimit);
-        call.enqueue(new Callback<Data>() {
-            @Override
-            public void onResponse(@NonNull Call<Data> call, @NonNull Response<Data> response) {
-                List<Post> results = fetchResults(response);
-
-                if (results != null) {
-                    totalPosts = Objects.requireNonNull(response.body()).response.blog.total_posts;
-                    postLiveData.setValue(results);
-
-                    MainHeader header = new MainHeader(response.body().response.blog.title,
-                            String.valueOf(response.body().response.blog.total_posts),
-                            DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
-
-                    mainHeaderMutableLiveData.setValue(header);
-
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
-                // handle error
-                Log.e("Error", Objects.requireNonNull(t.getMessage()));
-                singleLiveErrorEvent.setValue(t.getMessage());
-            }
-        });
-    }
-
-    private List<Post> fetchResults(Response<Data> response) {
-        if (response.body() != null) {
-            Data data = response.body();
-            return data.response.posts;
-        }
-        return null;
+        postRepository.fetchPosts();
     }
 }

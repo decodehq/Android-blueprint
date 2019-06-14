@@ -21,7 +21,9 @@ import com.decode.tumblr.R;
 import com.decode.tumblr.adapter.RecycleViewAdapter;
 import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.Post;
+import com.decode.tumblr.model.PostObject;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
+import com.decode.tumblr.viewmodel.PostViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +38,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     ProgressBar progressBar;
     private RecycleViewAdapter adapter;
     private FragmentMainViewModel fragmentMainViewModel;
+    private PostViewModel postViewModel;
 
     @Nullable
     @Override
@@ -57,6 +60,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
 
         // Get data
         fragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
+        postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         subscribePostData();
 
@@ -65,11 +69,10 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
             swipeRefreshLayout.setRefreshing(true);
             fragmentMainViewModel.fetchPosts();
         });
-
     }
 
     private void subscribePostData() {
-        fragmentMainViewModel.getPostLiveData().observe(this, posts -> {
+        postViewModel.getPosts().observe(this, posts -> {
             adapter = new RecycleViewAdapter(posts);
             recyclerView.setAdapter(adapter);
             adapter.setOnPostClickListener(FragmentMain.this);
@@ -83,10 +86,8 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     }
 
     @Override
-    public void onPostClick(Post post, View view) {
-
+    public void onPostClick(PostObject post, View view) {
         FragmentMainDirections.ActionFragmentMainToFragmentDetails action = FragmentMainDirections.actionFragmentMainToFragmentDetails(post);
         Navigation.findNavController(view).navigate(action);
-
     }
 }

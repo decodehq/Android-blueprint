@@ -20,7 +20,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.decode.tumblr.R;
-import com.decode.tumblr.helpers.DateFunction;
 
 import java.util.Objects;
 
@@ -65,64 +64,32 @@ public class FragmentDetails extends Fragment {
             return;
         }
 
-        String tags = "";
-        for (int i = 0; i < args.getPostObject().tags.size(); i++) {
-            tags = tags + " #" + args.getPostObject().tags.get(i);
-        }
+        String data = "<b> Blog name:</b> " + args.getPostObject().getTitle();
 
-        String data = "<b> Blog name:</b> " + args.getPostObject().blogName +
-                "<br> <b> Can like:</b> " + args.getPostObject().canLike +
-                "<br> <b> Can reblog: </b> " + args.getPostObject().canReblog +
-                "<br> <b> Can reply: </b> " + args.getPostObject().canReply +
-                "<br> <b> Can send in message: </b> " + args.getPostObject().canSendInMessage +
-                "<br> <b> Caption: </b> " + args.getPostObject().caption +
-                "<br> <b> Date: </b> " + args.getPostObject().date +
-                "<br> <b> Format: </b> " + args.getPostObject().format +
-                "<br> <b> Id: </b> " + args.getPostObject().id +
-                "<br> <b> Image permalink: </b> " + args.getPostObject().imagePermalink +
-                "<br> <b> Is blocks post format: </b> " + args.getPostObject().isBlocksPostFormat +
-                "<br> <b> Note count: </b> " + args.getPostObject().noteCount +
-                "<br> <b> Post url: </b> " + args.getPostObject().postUrl +
-                "<br> <b> Reblog key: </b> " + args.getPostObject().reblogKey +
-                "<br> <b> Recommended color: </b> " + args.getPostObject().recommendedColor +
-                "<br> <b> Recommended source: </b> " + args.getPostObject().recommendedColor +
-                "<br> <b> Short url: </b> " + args.getPostObject().shortUrl +
-                "<br> <b> Slug: </b> " + args.getPostObject().slug +
-                "<br> <b> State: </b> " + args.getPostObject().state +
-                "<br> <b> Summary: </b> " + args.getPostObject().summary +
-                "<br> <b> Tags: </b> " + tags +
-                "<br> <b> Timestamp: </b> " + DateFunction.getDateCurrentTimeZone(args.getPostObject().timestamp) +
-                "<br> <b> Type: </b> " + args.getPostObject().type;
 
         txtParacelableData.setText(Html.fromHtml(data));
 
-        try {
+        if (args.getPostObject().getPhotoObject() == null) {
+            Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
 
-            if (args.getPostObject().photos == null) {
-                Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
+        } else {
 
-            } else {
+            Glide.with(Objects.requireNonNull(getContext()))
+                    .load(args.getPostObject().getPhotoObject().getUrl())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            Log.e(TAG, "Error loading image", e);
+                            Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
+                            return false;
+                        }
 
-                Glide.with(Objects.requireNonNull(getContext()))
-                        .load(args.getPostObject().photos.get(0).altSizes.get(2).url)
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                Log.e(TAG, "Error loading image", e);
-                                Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                return false;
-                            }
-                        })
-                        .into(imgPostLarge);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(imgPostLarge);
         }
     }
 }

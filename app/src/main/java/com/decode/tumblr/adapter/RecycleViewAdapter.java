@@ -17,9 +17,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.decode.tumblr.R;
-import com.decode.tumblr.helpers.DateFunction;
 import com.decode.tumblr.interfaces.OnPostClickListener;
-import com.decode.tumblr.model.Post;
+import com.decode.tumblr.model.PostObject;
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ import butterknife.ButterKnife;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
     private static final String TAG = RecycleViewAdapter.class.getSimpleName();
 
-    private List<Post> postList;
+    private List<PostObject> postList;
     private OnPostClickListener onPostClickListener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -53,12 +52,12 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         this.onPostClickListener = onPostClickListener;
     }
 
-    public void setPostList(List<Post> postList) {
+    public void setPostList(List<PostObject> postList) {
         this.postList = postList;
         notifyDataSetChanged();
     }
 
-    public RecycleViewAdapter(List<Post> postList) {
+    public RecycleViewAdapter(List<PostObject> postList) {
         this.postList = postList;
     }
 
@@ -71,42 +70,30 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final Post post = postList.get(position);
-        holder.txtTitle.setText(post.summary);
-        holder.txtUpdated.setText(DateFunction.getDateCurrentTimeZone(post.timestamp));
-        holder.txtTags.setText("");
+        final PostObject post = postList.get(position);
+        holder.txtTitle.setText(post.getTitle());
 
-        for (int i = 0; i < post.tags.size(); i++) {
-            holder.txtTags.setText(holder.txtTags.getText() + " #" + post.tags.get(i));
-        }
+        if (post.getPhotoObject() == null) {
+            Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
 
+        } else {
 
-        try {
+            Glide.with(holder.itemView)
+                    .load(post.getPhotoObject().getUrl())
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            Log.e(TAG, "Error loading image", e);
+                            Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
+                            return false;
+                        }
 
-            if (post.photos == null) {
-                Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
-
-            } else {
-
-                Glide.with(holder.itemView)
-                        .load(post.photos.get(0).altSizes.get(2).url)
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                Log.e(TAG, "Error loading image", e);
-                                Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                return false;
-                            }
-                        })
-                        .into(holder.imgPost);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            return false;
+                        }
+                    })
+                    .into(holder.imgPost);
         }
 
 

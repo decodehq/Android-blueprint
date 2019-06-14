@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentMain">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/fragmentMain">
 
     <fragment
         android:id="@+id/fragmentMain"
         android:name="com.decode.tumblr.fragment.FragmentMain"
-        android:label="FragmentMain" >
+        android:label="FragmentMain">
         <action
             android:id="@+id/action_fragmentMain_to_fragmentDetails"
             app:destination="@id/fragmentDetails"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
-            app:launchSingleTop="false"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="PostObject"
-            app:argType="com.decode.tumblr.model.Post" />
+            app:argType="com.decode.tumblr.model.PostObject" />
     </fragment>
 
     <fragment
         android:id="@+id/fragmentDetails"
         android:name="com.decode.tumblr.fragment.FragmentDetails"
-        android:label="FragmentDetails" >
+        android:label="FragmentDetails">
         <argument
             android:name="PostObject"
-            app:argType="com.decode.tumblr.model.Post" />
+            app:argType="com.decode.tumblr.model.PostObject" />
     </fragment>
 
 </navigation>
