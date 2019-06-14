@@ -6,12 +6,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.decode.tumblr.R;
-import com.decode.tumblr.model.MainHeader;
+import com.decode.tumblr.model.Post;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
+import com.decode.tumblr.viewmodel.PostViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.app_bar)
     AppBarLayout appBar;
-
+    private PostViewModel mPostViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +56,12 @@ public class MainActivity extends AppCompatActivity {
             txtTotalPosts.setText(mainHeader.getTotalPost());
             txtUpdated.setText(mainHeader.getUpdated());
         });
+
+
+        mPostViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        mPostViewModel.getmAllPosts();
+
+
+
     }
 }
