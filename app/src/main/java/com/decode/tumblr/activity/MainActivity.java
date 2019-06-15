@@ -9,8 +9,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.decode.tumblr.R;
+import com.decode.tumblr.repository.PostRepository;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
-import com.decode.tumblr.viewmodel.PostViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.txt_blog_title)
@@ -31,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     CollapsingToolbarLayout toolbarLayout;
     @BindView(R.id.app_bar)
     AppBarLayout appBar;
-    private PostViewModel postViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,18 +45,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(getString(R.string.android_onboarding_project));
 
         FragmentMainViewModel mainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel.class);
-
         mainViewModel.fetchPosts();
 
+
         // Set header data
-        mainViewModel.getMainHeaderMutableLiveData().observe(this, mainHeader -> {
-            txtBlogTitle.setText(mainHeader.getTitle());
-            txtTotalPosts.setText(mainHeader.getTotalPost());
-            txtUpdated.setText(mainHeader.getUpdated());
+        mainViewModel.getMainHeaderLiveData().observe(this, header -> {
+
+            if (header != null) {
+                txtBlogTitle.setText(header.getTitle());
+                txtTotalPosts.setText(header.getTotalPost());
+                txtUpdated.setText(header.getUpdated());
+            }
         });
-
-
-
-
     }
 }

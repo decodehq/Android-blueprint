@@ -27,6 +27,7 @@ public class PostViewModel extends AndroidViewModel {
         observeAllPosts();
     }
 
+
     @Override
     protected void onCleared() {
         super.onCleared();
@@ -52,4 +53,5 @@ public class PostViewModel extends AndroidViewModel {
     public MutableLiveData<List<PostObject>> getPosts() {
         return posts;
     }
+
 }

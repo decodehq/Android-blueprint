@@ -28,6 +28,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import static com.decode.tumblr.App.API_KEY;
 
 public class PostRepository {
@@ -56,51 +57,45 @@ public class PostRepository {
                 List<Post> results = fetchResults(response);
 
                 if (results != null) {
+
                     MainHeader header = new MainHeader(response.body().response.blog.title,
                             String.valueOf(response.body().response.blog.total_posts),
                             DateFunction.getDateCurrentTimeZone(Long.parseLong(response.body().response.blog.updated)));
 
-                    AsyncTask.execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            //TODO your background code
-                            headerDao.insert(header);
+                    Log.i(TAG, "onResponse: " + header.getTitle() + " - " + header.getTotalPost() + " " + header.getUpdated());
 
-                            // Save photo object && post object to database
-                            if (response.body() != null && response.body().response.posts != null) {
+                    AsyncTask.execute(() -> {
+                        //TODO your background code
+                        headerDao.insert(header);
 
-                                for (Post post : response.body().response.posts) {
+                        // Save photo object && post object to database
+                        if (response.body() != null && response.body().response.posts != null) {
 
-//                                    if (post.photos.get(0) != null || post.photos.get(0).altSizes.get(2) != null) {
-                                    try {
-                                        Photo photo = post.photos.get(0);
+                            for (Post post : response.body().response.posts) {
 
-                                        PhotoObject photoObject = new PhotoObject();
-                                        photoObject.setUrl(photo.altSizes.get(2).url);
-                                        int photoId = (int) photoDao.insert(photoObject);
+                                try {
 
-                                        PostObject postObject = new PostObject();
-                                        postObject.setTitle(post.summary);
-                                        postObject.setId(post.id);
-                                        postObject.setPhotoObject(photoObject);
-                                        postObject.setPhotoId(photoId);
+                                    Photo photo = post.photos.get(0);
 
-                                        postDao.insert(postObject);
+                                    PhotoObject photoObject = new PhotoObject();
+                                    photoObject.setUrl(photo.altSizes.get(2).url);
+                                    int photoId = (int) photoDao.insert(photoObject);
 
-                                        Log.i("Image", "run: "+postObject.getPhotoObject().getUrl());
+                                    PostObject postObject = new PostObject();
+                                    postObject.setTitle(post.summary);
+                                    postObject.setId(post.id);
+                                    postObject.setPhotoObject(photoObject);
+                                    postObject.setPhotoId(photoId);
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
+                                    postDao.insert(postObject);
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             }
-
-//                        }
+                        }
                     });
-
                 }
-
             }
 
             @Override
@@ -113,15 +108,15 @@ public class PostRepository {
 
 
     public LiveData<List<PostObject>> getPosts() {
-
         return postDao.getAllPosts();
+    }
 
+    public LiveData<MainHeader> getHeader() {
+        return headerDao.getHeader();
     }
 
     public PhotoObject getPhotoById(int id) {
-
         return photoDao.getById(id);
-
     }
 
     private List<Post> fetchResults(Response<Data> response) {
@@ -130,24 +125,5 @@ public class PostRepository {
             return data.response.posts;
         }
         return null;
-    }
-
-    public void insert(PostObject word) {
-        new insertAsyncTask(postDao).execute(word);
-    }
-
-    private static class insertAsyncTask extends AsyncTask<PostObject, Void, Void> {
-
-        private PostDao mAsyncTaskDao;
-
-        insertAsyncTask(PostDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final PostObject... params) {
-            mAsyncTaskDao.insert(params[0]);
-            return null;
-        }
     }
 }
