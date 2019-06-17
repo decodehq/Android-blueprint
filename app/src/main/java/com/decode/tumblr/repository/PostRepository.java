@@ -65,15 +65,14 @@ public class PostRepository {
                     Log.i(TAG, "onResponse: " + header.getTitle() + " - " + header.getTotalPost() + " " + header.getUpdated());
 
                     AsyncTask.execute(() -> {
-                        //TODO your background code
+
+                        // Save header object to database
                         headerDao.insert(header);
 
                         // Save photo object && post object to database
-                        if (response.body() != null && response.body().response.posts != null) {
+                        if (response.body() != null && response.body().response.posts != null && response.body().response.posts.get(0).photos !=null) {
 
                             for (Post post : response.body().response.posts) {
-
-                                try {
 
                                     Photo photo = post.photos.get(0);
 
@@ -89,9 +88,6 @@ public class PostRepository {
 
                                     postDao.insert(postObject);
 
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
                     });

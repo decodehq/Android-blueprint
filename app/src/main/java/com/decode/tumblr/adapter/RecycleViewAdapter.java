@@ -20,6 +20,7 @@ import com.decode.tumblr.R;
 import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.PostObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
     private static final String TAG = RecycleViewAdapter.class.getSimpleName();
 
-    private List<PostObject> postList;
+    private List<PostObject> postList  = new ArrayList<>();
     private OnPostClickListener onPostClickListener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -57,8 +58,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         notifyDataSetChanged();
     }
 
-    public RecycleViewAdapter(List<PostObject> postList) {
-        this.postList = postList;
+    public RecycleViewAdapter() {
     }
 
 

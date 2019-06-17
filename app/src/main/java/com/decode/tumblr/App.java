@@ -39,9 +39,6 @@ public class App extends Application {
 
 
     public static App getInstance() {
-        if (instance == null) {
-            instance = new App();
-        }
         return instance;
     }
 }

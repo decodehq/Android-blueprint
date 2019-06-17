@@ -25,6 +25,9 @@ import com.decode.tumblr.model.PostObject;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
 import com.decode.tumblr.viewmodel.PostViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,6 +42,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     private RecycleViewAdapter adapter;
     private FragmentMainViewModel fragmentMainViewModel;
     private PostViewModel postViewModel;
+    private List<PostObject> postList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -57,6 +61,10 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        // Setup adapter
+        adapter = new RecycleViewAdapter();
+        recyclerView.setAdapter(adapter);
+        adapter.setOnPostClickListener(FragmentMain.this);
 
         // Get data
         fragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
@@ -73,16 +81,15 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
 
     private void subscribePostData() {
         postViewModel.getPosts().observe(this, posts -> {
-            adapter = new RecycleViewAdapter(posts);
-            recyclerView.setAdapter(adapter);
-            adapter.setOnPostClickListener(FragmentMain.this);
-
+            postList.clear();
+            postList.addAll(posts);
+            adapter.setPostList(postList);
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         });
 
         // Subscribe -> Single live error event
-        fragmentMainViewModel.getSingleLiveErrorEvent().observe(this, s -> Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show());
+        fragmentMainViewModel.loadErrorEvent().observe(this, s -> Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show());
     }
 
     @Override

@@ -15,14 +15,13 @@ public class FragmentMainViewModel extends AndroidViewModel {
 
     private SingleLiveEvent<String> singleLiveErrorEvent = new SingleLiveEvent<>();
     private PostRepository postRepository;
-    private MutableLiveData<MainHeader> mainHeaderMutableLiveData = new MutableLiveData<>();
 
     public FragmentMainViewModel(@NonNull Application context) {
         super(context);
         postRepository = new PostRepository(context);
     }
 
-    public SingleLiveEvent<String> getSingleLiveErrorEvent() {
+    public SingleLiveEvent<String> loadErrorEvent() {
         return singleLiveErrorEvent;
     }
 
