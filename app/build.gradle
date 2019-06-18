@@ -74,6 +74,9 @@ dependencies {
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.0.1"
+
+    // RxJava
+    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
 }
 
 
