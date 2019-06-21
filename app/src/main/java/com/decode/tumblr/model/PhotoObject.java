@@ -29,4 +29,5 @@ public class PhotoObject {
     public void setUrl(@NonNull String url) {
         this.url = url;
     }
+
 }

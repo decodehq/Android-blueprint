@@ -70,9 +70,11 @@ public class PostRepository {
                         headerDao.insert(header);
 
                         // Save photo object && post object to database
-                        if (response.body() != null && response.body().response.posts != null && response.body().response.posts.get(0).photos !=null) {
+                        if (response.body() != null || response.body().response.posts != null || response.body().response.posts.get(0).photos != null) {
 
                             for (Post post : response.body().response.posts) {
+
+                                if (post.photos != null) {
 
                                     Photo photo = post.photos.get(0);
 
@@ -87,6 +89,8 @@ public class PostRepository {
                                     postObject.setPhotoId(photoId);
 
                                     postDao.insert(postObject);
+                                }
+
 
                             }
                         }
@@ -122,4 +126,5 @@ public class PostRepository {
         }
         return null;
     }
+
 }

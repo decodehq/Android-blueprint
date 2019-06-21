@@ -1,6 +1,7 @@
 package com.decode.tumblr.api;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
@@ -11,6 +12,7 @@ public class ApiClient {
             String BASE_URL = "https://api.tumblr.com/v2/blog/positive-memes.tumblr.com/";
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
