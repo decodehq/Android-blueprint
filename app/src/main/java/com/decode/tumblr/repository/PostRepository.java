@@ -93,7 +93,6 @@ public class PostRepository {
                                 }
 
 
-                                }
                             }
                         }
                     });
@@ -101,10 +100,11 @@ public class PostRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<Data> call, @NonNull Throwable t) {
+            public void onFailure(Call<Data> call, Throwable t) {
                 // handle error
                 Log.e("Error", Objects.requireNonNull(t.getMessage()));
             }
+
         });
     }
 

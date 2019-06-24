@@ -79,7 +79,6 @@ dependencies {
 
     // RxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-<<<<<<< HEAD
     implementation "androidx.lifecycle:lifecycle-reactivestreams:2.0.0"
     implementation "io.reactivex.rxjava2:rxjava:2.2.6"
 
@@ -113,11 +112,9 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.15'
 
 
-=======
     implementation 'io.reactivex.rxjava2:rxjava:2.x.x'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.6.0'
     implementation "androidx.room:room-rxjava2:2.1.0"
->>>>>>> 0e2361a9aa0134fcc695f38c709ce5583c4fce65
 }
 
 

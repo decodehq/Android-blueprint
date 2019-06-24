@@ -1,21 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.room:room-rxjava2:2.1.0@aar">
     <CLASSES>
-<<<<<<< HEAD
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2f9d861561fde9b4e78f757b7ad930e7/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2f9d861561fde9b4e78f757b7ad930e7/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.room/room-rxjava2/2.1.0/f587d849384c79a23222e06a3e8e1d1c5bab6460/room-rxjava2-2.1.0-sources.jar!/" />
-=======
-      <root url="jar://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/transforms-2/files-2.1/1723be4c855962cf1f396d6d759dc716/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/transforms-2/files-2.1/1723be4c855962cf1f396d6d759dc716/res" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../MyFirstMVP/.gradle/caches/modules-2/files-2.1/androidx.room/room-rxjava2/2.1.0/f587d849384c79a23222e06a3e8e1d1c5bab6460/room-rxjava2-2.1.0-sources.jar!/" />
->>>>>>> 0e2361a9aa0134fcc695f38c709ce5583c4fce65
     </SOURCES>
   </library>
 </component>
