@@ -30,9 +30,11 @@ android {
 allprojects {
     repositories {
         google()
+        maven { url 'https://jitpack.io' }
     }
 
 }
+
 
 
 dependencies {
@@ -76,7 +78,40 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.0.1"
 
     // RxJava
-    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: '2.1.1'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "androidx.lifecycle:lifecycle-reactivestreams:2.0.0"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.6"
+
+    def room_version = "2.1.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // optional - RxJava support for Room
+    implementation "androidx.room:room-rxjava2:$room_version"
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "androidx.room:room-guava:$room_version"
+
+    // Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+    // koin version
+    def koin_version = '2.0.1'
+
+    // Koin for Android
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
+
+    // Dagger2
+    implementation 'com.google.dagger:dagger-android:2.15'
+    implementation 'com.google.dagger:dagger-android-support:2.15' // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.15'
+
+
 }
 
 

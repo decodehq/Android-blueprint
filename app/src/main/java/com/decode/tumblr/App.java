@@ -18,9 +18,12 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+
         instance = this;
         startWorkManager();
     }
+
 
     private void startWorkManager() {
         PeriodicWorkRequest work = new PeriodicWorkRequest.Builder(MyWorker.class,

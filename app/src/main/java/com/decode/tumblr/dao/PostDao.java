@@ -1,14 +1,13 @@
 package com.decode.tumblr.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
 import com.decode.tumblr.model.PostObject;
-
 import java.util.List;
+import io.reactivex.Flowable;
+
 
 @Dao
 public interface PostDao {
@@ -20,6 +19,6 @@ public interface PostDao {
     void deleteAll();
 
     @Query("SELECT * from post_table ORDER BY title ASC")
-    LiveData<List<PostObject>> getAllPosts();
+    Flowable<List<PostObject>> getAllPosts();
 
 }

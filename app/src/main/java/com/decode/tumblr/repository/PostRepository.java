@@ -24,6 +24,7 @@ import com.decode.tumblr.model.PostObject;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.Flowable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,9 +71,11 @@ public class PostRepository {
                         headerDao.insert(header);
 
                         // Save photo object && post object to database
-                        if (response.body() != null && response.body().response.posts != null && response.body().response.posts.get(0).photos !=null) {
+                        if (response.body() != null || response.body().response.posts != null || response.body().response.posts.get(0).photos != null) {
 
                             for (Post post : response.body().response.posts) {
+
+                                if (post.photos != null) {
 
                                     Photo photo = post.photos.get(0);
 
@@ -88,6 +91,7 @@ public class PostRepository {
 
                                     postDao.insert(postObject);
 
+                                }
                             }
                         }
                     });
@@ -103,9 +107,10 @@ public class PostRepository {
     }
 
 
-    public LiveData<List<PostObject>> getPosts() {
+    public Flowable<List<PostObject>> getPosts() {
         return postDao.getAllPosts();
     }
+
 
     public LiveData<MainHeader> getHeader() {
         return headerDao.getHeader();

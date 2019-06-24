@@ -84,7 +84,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                             Log.e(TAG, "Error loading image", e);
-                            Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
+                            //Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
                             return false;
                         }
 
