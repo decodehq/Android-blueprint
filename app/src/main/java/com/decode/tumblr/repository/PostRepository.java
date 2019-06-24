@@ -90,6 +90,8 @@ public class PostRepository {
                                     postObject.setPhotoId(photoId);
 
                                     postDao.insert(postObject);
+                                }
+
 
                                 }
                             }
@@ -127,4 +129,5 @@ public class PostRepository {
         }
         return null;
     }
+
 }

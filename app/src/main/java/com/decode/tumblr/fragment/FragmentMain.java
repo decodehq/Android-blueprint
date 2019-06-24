@@ -1,6 +1,8 @@
 package com.decode.tumblr.fragment;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.decode.tumblr.R;
 import com.decode.tumblr.adapter.RecycleViewAdapter;
 import com.decode.tumblr.interfaces.OnPostClickListener;
-import com.decode.tumblr.model.Post;
 import com.decode.tumblr.model.PostObject;
 import com.decode.tumblr.viewmodel.FragmentMainViewModel;
 import com.decode.tumblr.viewmodel.PostViewModel;
@@ -30,6 +31,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class FragmentMain extends Fragment implements OnPostClickListener {
 
@@ -43,6 +51,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     private FragmentMainViewModel fragmentMainViewModel;
     private PostViewModel postViewModel;
     private List<PostObject> postList = new ArrayList<>();
+    private Disposable disposable;
 
     @Nullable
     @Override
@@ -79,6 +88,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         });
     }
 
+
     private void subscribePostData() {
         postViewModel.getPosts().observe(this, posts -> {
             postList.clear();
@@ -87,6 +97,7 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
             progressBar.setVisibility(View.GONE);
             swipeRefreshLayout.setRefreshing(false);
         });
+
 
         // Subscribe -> Single live error event
         fragmentMainViewModel.loadErrorEvent().observe(this, s -> Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show());
