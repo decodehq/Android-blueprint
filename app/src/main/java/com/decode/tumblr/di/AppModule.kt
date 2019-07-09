@@ -6,9 +6,7 @@ import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    // single instance of PostRepository
-    single { PostRepository(get()) }
+    single { PostRepository(get(), get(), get(), get()) }
 
-    // MyViewModel ViewModel
     viewModel { PostViewModel(get(), get()) }
 }

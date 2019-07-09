@@ -5,9 +5,9 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.decode.tumblr.data.model.MainHeader;
-import com.decode.tumblr.data.model.PhotoObject;
-import com.decode.tumblr.data.model.PostObject;
+import com.decode.tumblr.data.db.model.MainHeader;
+import com.decode.tumblr.data.db.model.PhotoObject;
+import com.decode.tumblr.data.db.model.PostObject;
 import com.decode.tumblr.data.repository.PostRepository;
 import com.decode.tumblr.helpers.SingleLiveEvent;
 

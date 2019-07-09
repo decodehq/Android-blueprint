@@ -10,21 +10,18 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.ButterKnife
 import com.decode.tumblr.R
-import com.decode.tumblr.data.model.PostObject
+import com.decode.tumblr.data.db.model.PostObject
 import kotlinx.android.synthetic.main.layout_fragment_main.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class FragmentMain : Fragment(), RecycleViewAdapter.OnPostClickListener {
+class FragmentMain : Fragment(), PostsAdapter.OnPostClickListener {
 
-    val postViewModel: PostViewModel by viewModel()
-    private var adapter: RecycleViewAdapter? = null
+    private val postViewModel: PostViewModel by viewModel()
+    private var adapter: PostsAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.layout_fragment_main, container, false)
-        ButterKnife.bind(this, view)
-        return view
+        return inflater.inflate(R.layout.layout_fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,7 +31,7 @@ class FragmentMain : Fragment(), RecycleViewAdapter.OnPostClickListener {
         recyclerView!!.itemAnimator = DefaultItemAnimator()
 
         // Setup adapter
-        adapter = RecycleViewAdapter()
+        adapter = PostsAdapter()
         recyclerView!!.adapter = adapter
         adapter!!.setOnPostClickListener(this@FragmentMain)
 

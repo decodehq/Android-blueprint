@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -21,9 +22,15 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            buildConfigField "String", "BASE_URL", "\"https://api.tumblr.com/v2/blog/positive-memes.tumblr.com/\""
+        }
+
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", "\"https://api.tumblr.com/v2/blog/positive-memes.tumblr.com/\""
         }
     }
 }
@@ -33,6 +40,10 @@ allprojects {
         google()
         maven { url 'https://jitpack.io' }
     }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 dependencies {
@@ -48,17 +59,13 @@ dependencies {
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
 
-    // Butter Knife
-    implementation 'com.jakewharton:butterknife:10.1.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
 
     // Navigation Components
     implementation "androidx.navigation:navigation-fragment:2.0.0"
@@ -67,8 +74,8 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-runtime:2.1.0"
-    annotationProcessor "androidx.room:room-compiler:2.1.0"
-    androidTestImplementation "androidx.room:room-testing:2.1.0"
+    kapt 'android.arch.persistence.room:compiler:2.1.0'
+    implementation "androidx.room:room-rxjava2:2.1.0"
 
     // WorkManager
     implementation "android.arch.work:work-runtime:1.0.1"
@@ -81,36 +88,28 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // koin version
-    def koin_version = '2.0.1'
-
     // Koin for Android
-    implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-android-viewmodel:$koin_version"
+    implementation "org.koin:koin-android:2.0.1"
+    implementation "org.koin:koin-android-viewmodel:2.0.1"
 
     implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
     implementation "androidx.room:room-rxjava2:2.1.0"
 
-    def room_version = "2.1.0"
-
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
-    // For Kotlin use kapt instead of annotationProcessor
+    implementation "androidx.room:room-runtime:2.1.0"
+    kapt "androidx.room:room-compiler:2.1.0"
 
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
-
-    // optional - RxJava support for Room
-    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-ktx:2.1.0"
 
     // optional - Guava support for Room, including Optional and ListenableFuture
-    implementation "androidx.room:room-guava:$room_version"
+    implementation "androidx.room:room-guava:2.1.0"
 
     // Test helpers
-    testImplementation "androidx.room:room-testing:$room_version"
+    testImplementation "androidx.room:room-testing:2.1.0"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "androidx.room:room-testing:2.1.0"
 }

@@ -6,6 +6,8 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.decode.tumblr.di.appModule
+import com.decode.tumblr.di.dbModule
+import com.decode.tumblr.di.retrofitModule
 import com.decode.tumblr.service.PostsFetchWorker
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -26,13 +28,12 @@ class App : Application() {
     private fun initKoin() {
         startKoin {
             androidContext(this@App)
-            modules(appModule)
+            modules(arrayListOf(dbModule, retrofitModule, appModule))
         }
     }
 
     private fun startWorkManager() {
-        val work = PeriodicWorkRequest.Builder(PostsFetchWorker::class.java,
-                2, TimeUnit.HOURS)
+        val work = PeriodicWorkRequest.Builder(PostsFetchWorker::class.java, 2, TimeUnit.HOURS)
                 .setConstraints(constraints())
                 .build()
         WorkManager.getInstance().enqueue(work)
