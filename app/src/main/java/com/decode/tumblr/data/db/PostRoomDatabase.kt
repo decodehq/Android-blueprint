@@ -14,7 +14,7 @@ import com.decode.tumblr.data.db.model.PostObject
 abstract class PostRoomDatabase : RoomDatabase() {
 
     companion object {
-        val POSTS_DATABASE = "post_database"
+        const val POSTS_DATABASE = "post_database"
     }
 
     abstract fun postDao(): PostDao

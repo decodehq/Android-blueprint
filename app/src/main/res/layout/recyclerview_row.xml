@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".posts.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"

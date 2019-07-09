@@ -8,7 +8,8 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
-class PostsFetchWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams), KoinComponent {
+class PostsFetchWorker(context: Context, workerParams: WorkerParameters)
+    : Worker(context, workerParams), KoinComponent {
 
     private val postRepository: PostRepository by inject()
 

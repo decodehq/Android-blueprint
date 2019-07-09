@@ -35,13 +35,6 @@ android {
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        maven { url 'https://jitpack.io' }
-    }
-}
-
 androidExtensions {
     experimental = true
 }
@@ -74,8 +67,9 @@ dependencies {
 
     // Room components
     implementation "androidx.room:room-runtime:2.1.0"
-    kapt 'android.arch.persistence.room:compiler:2.1.0'
     implementation "androidx.room:room-rxjava2:2.1.0"
+    kapt 'android.arch.persistence.room:compiler:2.1.0'
+    kapt "androidx.room:room-compiler:2.1.0"
 
     // WorkManager
     implementation "android.arch.work:work-runtime:1.0.1"
@@ -92,12 +86,10 @@ dependencies {
     implementation "org.koin:koin-android:2.0.1"
     implementation "org.koin:koin-android-viewmodel:2.0.1"
 
+    // RxJava
     implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
     implementation "androidx.room:room-rxjava2:2.1.0"
-
-    implementation "androidx.room:room-runtime:2.1.0"
-    kapt "androidx.room:room-compiler:2.1.0"
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.1.0"
@@ -107,8 +99,8 @@ dependencies {
 
     // Test helpers
     testImplementation "androidx.room:room-testing:2.1.0"
-
     testImplementation 'junit:junit:4.12'
+
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation "androidx.room:room-testing:2.1.0"
