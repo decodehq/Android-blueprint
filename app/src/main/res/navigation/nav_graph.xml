@@ -17,7 +17,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="PostObject"
-            app:argType="com.decode.tumblr.model.PostObject" />
+            app:argType="com.decode.tumblr.data.model.PostObject" />
     </fragment>
 
     <fragment
@@ -26,7 +26,7 @@
         android:label="FragmentDetails">
         <argument
             android:name="PostObject"
-            app:argType="com.decode.tumblr.model.PostObject" />
+            app:argType="com.decode.tumblr.data.model.PostObject" />
     </fragment>
 
 </navigation>

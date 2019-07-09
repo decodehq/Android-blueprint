@@ -5,11 +5,11 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
+import com.decode.tumblr.data.model.MainHeader;
+import com.decode.tumblr.data.model.PhotoObject;
+import com.decode.tumblr.data.model.PostObject;
+import com.decode.tumblr.data.repository.PostRepository;
 import com.decode.tumblr.helpers.SingleLiveEvent;
-import com.decode.tumblr.model.MainHeader;
-import com.decode.tumblr.model.PhotoObject;
-import com.decode.tumblr.model.PostObject;
-import com.decode.tumblr.repository.PostRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +29,9 @@ public class PostViewModel extends AndroidViewModel {
     private SingleLiveEvent<String> loadingFailed = new SingleLiveEvent<>();
     private SingleLiveEvent<String> loadingSuccess = new SingleLiveEvent<>();
 
-    public PostViewModel(Application application) {
+    public PostViewModel(Application application, PostRepository postRepository) {
         super(application);
-        repository = new PostRepository(application);
+        repository = postRepository;
         observeAllPosts();
         observeHeader();
     }
