@@ -1,4 +1,4 @@
-package com.decode.tumblr.fragment;
+package com.decode.tumblr.posts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,20 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.decode.tumblr.R;
-import com.decode.tumblr.adapter.RecycleViewAdapter;
-import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.PostObject;
-import com.decode.tumblr.viewmodel.FragmentMainViewModel;
-import com.decode.tumblr.viewmodel.PostViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.disposables.Disposable;
 
-public class FragmentMain extends Fragment implements OnPostClickListener {
+public class FragmentMain extends Fragment implements RecycleViewAdapter.OnPostClickListener {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -39,11 +31,9 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+
     private RecycleViewAdapter adapter;
-    private FragmentMainViewModel fragmentMainViewModel;
     private PostViewModel postViewModel;
-    private List<PostObject> postList = new ArrayList<>();
-    private Disposable disposable;
 
     @Nullable
     @Override
@@ -52,7 +42,6 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         ButterKnife.bind(this, view);
         return view;
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -68,7 +57,6 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         adapter.setOnPostClickListener(FragmentMain.this);
 
         // Get data
-        fragmentMainViewModel = ViewModelProviders.of(getActivity()).get(FragmentMainViewModel.class);
         postViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
 
         subscribePostData();
@@ -76,28 +64,25 @@ public class FragmentMain extends Fragment implements OnPostClickListener {
         // On swipe - get new data from server
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(true);
-            fragmentMainViewModel.fetchPosts();
+            postViewModel.fetchPosts();
         });
-    }
-
-
-    private void subscribePostData() {
-        postViewModel.getPosts().observe(this, posts -> {
-            postList.clear();
-            postList.addAll(posts);
-            adapter.setPostList(postList);
-            progressBar.setVisibility(View.GONE);
-            swipeRefreshLayout.setRefreshing(false);
-        });
-
-
-        // Subscribe -> Single live error event
-        fragmentMainViewModel.loadErrorEvent().observe(this, s -> Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void onPostClick(PostObject post, View view) {
-        FragmentMainDirections.ActionFragmentMainToFragmentDetails action = FragmentMainDirections.actionFragmentMainToFragmentDetails(post);
+        FragmentMainDirections.ActionFragmentMainToFragmentDetails action =
+                FragmentMainDirections.actionFragmentMainToFragmentDetails(post);
         Navigation.findNavController(view).navigate(action);
+    }
+
+    private void subscribePostData() {
+        postViewModel.getPosts().observe(this, posts -> {
+            adapter.setPostList(posts);
+            progressBar.setVisibility(View.GONE);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+        postViewModel.getLoadingFailed().observe(this, error ->
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show());
     }
 }

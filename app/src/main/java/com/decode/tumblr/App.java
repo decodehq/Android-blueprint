@@ -7,26 +7,21 @@ import androidx.work.NetworkType;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.decode.tumblr.service.MyWorker;
+import com.decode.tumblr.service.PostsFetchWorker;
 
 import java.util.concurrent.TimeUnit;
 
 public class App extends Application {
     public static String API_KEY = "si0PHNqV4V39DZyIxV82QFnxovHxcjXsVpzV9mTHlFHQjNivH1";
-    public static App instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-
-        instance = this;
         startWorkManager();
     }
-
-
+    
     private void startWorkManager() {
-        PeriodicWorkRequest work = new PeriodicWorkRequest.Builder(MyWorker.class,
+        PeriodicWorkRequest work = new PeriodicWorkRequest.Builder(PostsFetchWorker.class,
                 2, TimeUnit.HOURS)
                 .setConstraints(constraints())
                 .build();
@@ -40,8 +35,4 @@ public class App extends Application {
         return constraints;
     }
 
-
-    public static App getInstance() {
-        return instance;
-    }
 }

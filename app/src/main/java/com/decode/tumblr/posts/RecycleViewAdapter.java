@@ -1,7 +1,6 @@
-package com.decode.tumblr.adapter;
+package com.decode.tumblr.posts;
 
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.decode.tumblr.R;
-import com.decode.tumblr.interfaces.OnPostClickListener;
 import com.decode.tumblr.model.PostObject;
 
 import java.util.ArrayList;
@@ -25,11 +23,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.MyViewHolder> {
-    private static final String TAG = RecycleViewAdapter.class.getSimpleName();
 
-    private List<PostObject> postList  = new ArrayList<>();
+    public interface OnPostClickListener {
+        void onPostClick(PostObject post, View view);
+    }
+
+    private List<PostObject> postList = new ArrayList<>();
     private OnPostClickListener onPostClickListener;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -48,7 +50,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         }
     }
 
-
     public void setOnPostClickListener(OnPostClickListener onPostClickListener) {
         this.onPostClickListener = onPostClickListener;
     }
@@ -57,10 +58,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         this.postList = postList;
         notifyDataSetChanged();
     }
-
-    public RecycleViewAdapter() {
-    }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -75,15 +72,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         if (post.getPhotoObject() == null) {
             Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
-
         } else {
-
             Glide.with(holder.itemView)
                     .load(post.getPhotoObject().getUrl())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.e(TAG, "Error loading image", e);
+                            Timber.e(e, "Error loading image");
                             //Glide.with(holder.itemView).load(R.drawable.no_image_available).into(holder.imgPost);
                             return false;
                         }
@@ -96,11 +91,8 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
                     .into(holder.imgPost);
         }
 
-
-        holder.itemView.setOnClickListener(v -> {
-            onPostClickListener.onPostClick(post, holder.itemView);
-
-        });
+        holder.itemView.setOnClickListener(v ->
+                onPostClickListener.onPostClick(post, holder.itemView));
     }
 
     @Override

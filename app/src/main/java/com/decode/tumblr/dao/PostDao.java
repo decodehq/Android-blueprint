@@ -4,8 +4,11 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+
 import com.decode.tumblr.model.PostObject;
+
 import java.util.List;
+
 import io.reactivex.Flowable;
 
 

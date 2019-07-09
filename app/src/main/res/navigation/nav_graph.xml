@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="com.decode.tumblr.fragment.FragmentMain"
+        android:name="com.decode.tumblr.posts.FragmentMain"
         android:label="FragmentMain">
         <action
             android:id="@+id/action_fragmentMain_to_fragmentDetails"
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/fragmentDetails"
-        android:name="com.decode.tumblr.fragment.FragmentDetails"
+        android:name="com.decode.tumblr.posts.details.FragmentDetails"
         android:label="FragmentDetails">
         <argument
             android:name="PostObject"

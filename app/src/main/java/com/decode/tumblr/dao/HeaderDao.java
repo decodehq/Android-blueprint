@@ -1,12 +1,13 @@
 package com.decode.tumblr.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.decode.tumblr.model.MainHeader;
+
+import io.reactivex.Flowable;
 
 @Dao
 public interface HeaderDao {
@@ -18,6 +19,6 @@ public interface HeaderDao {
     void deleteAll();
 
     @Query("SELECT * from header_table ORDER BY id ASC")
-    LiveData<MainHeader> getHeader();
+    Flowable<MainHeader> getHeader();
 
 }

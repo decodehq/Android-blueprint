@@ -1,9 +1,8 @@
-package com.decode.tumblr.fragment;
+package com.decode.tumblr.posts.details;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +24,9 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class FragmentDetails extends Fragment {
-    private static final String TAG = FragmentDetails.class.getSimpleName();
 
     @BindView(R.id.img_post_large)
     ImageView imgPostLarge;
@@ -36,7 +35,7 @@ public class FragmentDetails extends Fragment {
     @BindView(R.id.view_separator)
     View viewSeparator;
     @BindView(R.id.txt_paracelable_data)
-    TextView txtParacelableData;
+    TextView txtParcelableData;
 
     @Nullable
     @Override
@@ -52,34 +51,29 @@ public class FragmentDetails extends Fragment {
         getParcelableData();
     }
 
-
     private void getParcelableData() {
-        FragmentDetailsArgs args = null;
+        FragmentDetailsArgs args;
 
         if (getArguments() != null) {
             args = FragmentDetailsArgs.fromBundle(getArguments());
-
         } else {
-            txtParacelableData.setText(getString(R.string.no_data));
+            txtParcelableData.setText(getString(R.string.no_data));
             return;
         }
 
         String data = "<b> Blog name:</b> " + args.getPostObject().getTitle();
 
-
-        txtParacelableData.setText(Html.fromHtml(data));
+        txtParcelableData.setText(Html.fromHtml(data));
 
         if (args.getPostObject().getPhotoObject() == null) {
             Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
-
         } else {
-
             Glide.with(Objects.requireNonNull(getContext()))
                     .load(args.getPostObject().getPhotoObject().getUrl())
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.e(TAG, "Error loading image", e);
+                            Timber.e(e, "Error loading image");
                             Glide.with(Objects.requireNonNull(getContext())).load(R.drawable.no_image_available).into(imgPostLarge);
                             return false;
                         }

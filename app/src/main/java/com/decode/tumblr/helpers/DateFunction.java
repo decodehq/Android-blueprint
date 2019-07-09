@@ -14,10 +14,10 @@ public class DateFunction {
             calendar.setTimeInMillis(timestamp * 1000);
             calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-            Date currenTimeZone = (Date) calendar.getTime();
-            return sdf.format(currenTimeZone);
+            Date currentTimeZone = calendar.getTime();
+            return sdf.format(currentTimeZone);
         } catch (Exception e) {
+            return "";
         }
-        return "";
     }
 }

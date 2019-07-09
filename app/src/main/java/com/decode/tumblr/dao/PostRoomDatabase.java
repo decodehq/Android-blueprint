@@ -10,10 +10,10 @@ import com.decode.tumblr.model.MainHeader;
 import com.decode.tumblr.model.PhotoObject;
 import com.decode.tumblr.model.PostObject;
 
-
 @Database(entities = {PostObject.class, PhotoObject.class, MainHeader.class}, version = 1, exportSchema = false)
 public abstract class PostRoomDatabase extends RoomDatabase {
 
+    private static final String POSTS_DATABASE = "post_database";
     private static volatile PostRoomDatabase INSTANCE;
 
     public abstract PostDao postDao();
@@ -28,7 +28,7 @@ public abstract class PostRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PostRoomDatabase.class, "post_database")
+                            PostRoomDatabase.class, POSTS_DATABASE)
                             .build();
                 }
             }
