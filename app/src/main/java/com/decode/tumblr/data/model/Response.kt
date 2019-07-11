@@ -7,6 +7,6 @@ data class Response(
         var blog: Blog? = null,
 
         @SerializedName("posts")
-        var posts: List<Post>? = null
+        var posts: List<Post> = emptyList()
 
 )

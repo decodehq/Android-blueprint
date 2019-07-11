@@ -15,19 +15,18 @@ import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.lang.Long
 
 class PostRepository(private val apiService: ApiInterface,
                      private val postDao: PostDao,
                      private val photoDao: PhotoDao,
                      private val headerDao: HeaderDao) {
 
-    fun fetchPosts(): Maybe<List<Post>?> {
+    fun fetchPosts(): Maybe<List<Post>> {
         return apiService.getPosts(App.API_KEY, 0, 20)
                 .map { data -> data.response }
                 .doOnSuccess { insertHeader(it) }
                 .map { response -> response.posts }
-                .filter { it != null && it.isNotEmpty() && it[0].photos != null }
+                .filter { it.isNotEmpty() && it[0].photos != null }
                 .doOnSuccess { savePosts(it) }
                 .subscribeOn(Schedulers.io())
     }
@@ -42,26 +41,22 @@ class PostRepository(private val apiService: ApiInterface,
     val header: Flowable<MainHeader>
         get() = headerDao.header
 
-    private fun insertHeader(response: Response?) {
-        response?.let {
-            val header = MainHeader(0,
-                    it.blog?.title,
-                    it.blog?.total_posts.toString(),
-                    DateFunction.getDateCurrentTimeZone(Long.parseLong(it.blog!!.updated!!)))
+    private fun insertHeader(response: Response) {
+        val header = MainHeader(0,
+                response.blog?.title,
+                response.blog?.total_posts.toString(),
+                DateFunction.getDateCurrentTimeZone(response.blog!!.updated!!.toLong()))
 
-            Timber.i("onResponse: " + header.title + " - " + header.totalPost + " " + header.updated)
+        Timber.i("onResponse: " + header.title + " - " + header.totalPost + " " + header.updated)
 
-            headerDao.insert(header)
-        }
+        headerDao.insert(header)
     }
 
-    private fun savePosts(posts: List<Post>?) {
-        posts?.let {
-            for (post in it) {
-                if (post.photos != null) {
-                    val photoId = insertPhoto(post)
-                    insertPost(post, photoId)
-                }
+    private fun savePosts(posts: List<Post>) {
+        for (post in posts) {
+            if (post.photos != null) {
+                val photoId = insertPhoto(post)
+                insertPost(post, photoId)
             }
         }
     }

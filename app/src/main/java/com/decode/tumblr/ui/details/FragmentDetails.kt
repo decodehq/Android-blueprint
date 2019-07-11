@@ -1,18 +1,20 @@
 package com.decode.tumblr.ui.details
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.decode.tumblr.R
+import com.decode.tumblr.helpers.fromHtml
 import kotlinx.android.synthetic.main.layout_fragment_details.*
 
 class FragmentDetails : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.layout_fragment_details, container, false)
     }
 
@@ -33,7 +35,7 @@ class FragmentDetails : Fragment() {
 
         val data = "<b> Blog name:</b> " + args.postObject.title
 
-        txtParcelableData!!.text = Html.fromHtml(data)
+        txtParcelableData!!.text = fromHtml(data)
 
         Glide.with(context!!)
                 .load(args.postObject.photoObject?.url)

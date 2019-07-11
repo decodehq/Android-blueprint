@@ -8,6 +8,6 @@ data class Data(
         var meta: Meta? = null,
 
         @SerializedName("response")
-        var response: Response? = null
+        var response: Response = Response()
 
 )
